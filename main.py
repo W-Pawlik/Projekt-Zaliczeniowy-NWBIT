@@ -1,5 +1,6 @@
 import argparse
 import sys
+import json
 
 def parse_args():
     parser = argparse.ArgumentParser(description="File format converter")
@@ -11,6 +12,15 @@ def parse_args():
         sys.exit(1)
 
     return parser.parse_args()
+
+def load_json(input_file):
+    with open(input_file, 'r') as f:
+        try:
+            data = json.load(f)
+            return data
+        except json.JSONDecodeError as e:
+            print("Json parsing error: ", e)
+            sys.exit(1)
 
 if __name__ == '__main__':
     args = parse_args()
