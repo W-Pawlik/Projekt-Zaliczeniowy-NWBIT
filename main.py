@@ -36,7 +36,21 @@ def load_yaml(input_file):
             print("YAML parsing error: ", e)
             exit(1)
 
+def save_yaml(data, output_file):
+    with open(output_file, 'w') as f:
+        yaml.dump(data, f)
+
 if __name__ == '__main__':
     args = parse_args()
     input_file = args.input_file
     output_file = args.output_file
+
+    if input_file.endswith('.json'):
+        data = load_json(input_file)
+    elif input_file.endswith('.yml') or input_file.endswith('.yaml'):
+        data = load_yaml(input_file)
+
+    if output_file.endswith('.json'):
+        save_json(data, output_file)
+    elif output_file.endswith('.yml') or input_file.endswith('.yaml'):
+        save_yaml(data, output_file)
