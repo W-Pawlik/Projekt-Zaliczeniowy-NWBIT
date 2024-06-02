@@ -22,6 +22,10 @@ def load_json(input_file):
             print("Json parsing error: ", e)
             sys.exit(1)
 
+def save_json(data, output_file):
+    with open(output_file, 'w') as f:
+        json.dump(data, f, indent=2)
+
 if __name__ == '__main__':
     args = parse_args()
     input_file = args.input_file
