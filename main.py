@@ -3,6 +3,7 @@ import sys
 import json
 import yaml
 import xmltodict
+import xml.dom.minidom
 
 def parse_args():
     parser = argparse.ArgumentParser(description="File format converter")
@@ -51,6 +52,19 @@ def load_xml(input_file):
             print("XML parsing error: ", e)
             sys.exit(1)
 
+def save_xml(data, output_file):
+    try:
+        xml_string = xmltodict.unparse(data, pretty=True)
+        dom = xml.dom.minidom.parseString(xml_string)
+        formatted_xml = dom.toprettyxml(indent="    ")
+
+        with open(output_file, 'w') as f:
+            f.write(formatted_xml)
+    except Exception as e:
+        print("XML save error: ", e)
+        sys.exit(1)
+
+
 if __name__ == '__main__':
     args = parse_args()
     input_file = args.input_file
@@ -62,9 +76,16 @@ if __name__ == '__main__':
         data = load_yaml(input_file)
     elif input_file.endswith('.xml'):
         data = load_xml(input_file)        
-
+    else:
+        print("This format of input file is unsupported")
+        sys.exit(1)
 
     if output_file.endswith('.json'):
         save_json(data, output_file)
-    elif output_file.endswith('.yml') or input_file.endswith('.yaml'):
+    elif output_file.endswith('.yml') or output_file.endswith('.yaml'):
         save_yaml(data, output_file)
+    elif output_file.endswith('.xml'):
+        save_xml(data, output_file)
+    else:
+        print("This format of output file is unsupported")
+        sys.exit(1)
