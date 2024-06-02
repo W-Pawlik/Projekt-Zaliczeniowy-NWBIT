@@ -2,6 +2,7 @@ import argparse
 import sys
 import json
 import yaml
+import xmltodict
 
 def parse_args():
     parser = argparse.ArgumentParser(description="File format converter")
@@ -34,11 +35,21 @@ def load_yaml(input_file):
             return data
         except yaml.YAMLError as e:
             print("YAML parsing error: ", e)
-            exit(1)
+            sys.exit(1)
 
 def save_yaml(data, output_file):
     with open(output_file, 'w') as f:
         yaml.dump(data, f)
+
+def load_xml(input_file):
+    with open(input_file, 'r') as f:
+        xml_data = f.read()
+        try:
+            data = xmltodict.parse(xml_data)
+            return data
+        except Exception as e:
+            print("XML parsing error: ", e)
+            sys.exit(1)
 
 if __name__ == '__main__':
     args = parse_args()
@@ -49,6 +60,9 @@ if __name__ == '__main__':
         data = load_json(input_file)
     elif input_file.endswith('.yml') or input_file.endswith('.yaml'):
         data = load_yaml(input_file)
+    elif input_file.endswith('.xml'):
+        data = load_xml(input_file)        
+
 
     if output_file.endswith('.json'):
         save_json(data, output_file)
