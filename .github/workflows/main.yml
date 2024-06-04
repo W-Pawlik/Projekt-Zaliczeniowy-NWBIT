@@ -30,7 +30,7 @@ jobs:
       run: powershell .\installResources.ps1
 
     - name: Build executable
-      run: pyinstaller --onefile project.py
+      run: pyinstaller --onefile main.py
 
     - name: Upload artifact
       uses: actions/upload-artifact@v3
